@@ -266,7 +266,7 @@ class GraphCNN(nn.Module):
         self.drop1 = nn.Dropout(p=0.2)
     
 
-    def forward(self, x, data, pertubed=False):
+    def forward(self, x, data):
         #x = data.x
         # Compute graph convolutional part
         x = self.drop1(x)
@@ -276,9 +276,7 @@ class GraphCNN(nn.Module):
             else:
                 x = x + F.relu(gcn_layer(x, data.edge_index.long()))
             
-            if pertubed:
-                random_noise = torch.rand_like(x).to(x.device)
-                x = x + torch.sign(x) * F.normalize(random_noise, dim=-1) * 0.1
+            
         if self.pooling == 'MTP':
             # Apply GraphMultisetTransformer Pooling
             g_level_feat = self.pool(x, data.batch, data.edge_index.long())
@@ -291,7 +289,7 @@ class GraphCNN(nn.Module):
     
     
 class GraphDTI(nn.Module):
-    def __init__(self, drug_dim, prot_dim, output_dim, perturb=False, surface_feature=False):
+    def __init__(self, drug_dim, prot_dim, output_dim, surface_feature=False):
         super(GraphDTI, self).__init__()
         self.esm_linear = nn.Linear(prot_dim, 512)
         self.esm_linear_sf = nn.Linear(prot_dim, 448)
@@ -305,7 +303,6 @@ class GraphDTI(nn.Module):
         self.hidden2 = nn.Linear(1024, 256)
         self.drug_prot_linear = nn.Linear(512, 256)
         self.outlinear = nn.Linear(256, output_dim)
-        self.perturb = perturb
         self.surface_feature = surface_feature
         self.gradients = None
     
@@ -318,41 +315,22 @@ class GraphDTI(nn.Module):
         else:
             x1 = self.esm_linear(prot_data.x)
         gcn_n_feat1, gcn_g_feat1 = self.gcn(x1, prot_data)
-        if self.perturb:
-            gcn_n_feat2, gcn_g_feat2 = self.gcn(x1, prot_data, pertubed=True)
+        x2 = self.drug_linear(drug)
+        x2 = F.relu(x2)
+        x2 = F.dropout(x2, 0.2)
+        x2 = self.hidden2(x2)
+        # x2 = F.relu(x2)
+        # x2 = F.dropout(x2, 0.2)
             
-            x2 = self.drug_linear(drug)
-            x2 = F.relu(x2)
-            x2 = F.dropout(x2, 0.2)
-            x2 = self.hidden2(x2)
-            # x2 = F.relu(x2)
-            # x2 = F.dropout(x2, 0.2)
-            
-            x3 = torch.cat((x2, gcn_g_feat1), dim=1)
-            x3 = self.drug_prot_linear(x3)
-            x3 = F.relu(x3)
-            x3 = F.dropout(x3, 0.2)
-            out = self.outlinear(x3)
-            
-            return out, gcn_g_feat1, gcn_g_feat2
-        
-        else:
-            x2 = self.drug_linear(drug)
-            x2 = F.relu(x2)
-            x2 = F.dropout(x2, 0.2)
-            x2 = self.hidden2(x2)
-            # x2 = F.relu(x2)
-            # x2 = F.dropout(x2, 0.2)
-            
-            x3 = torch.cat((x2, gcn_g_feat1), dim=1)
-            x3 = self.drug_prot_linear(x3)
-            x3 = F.relu(x3)
-            x3 = F.dropout(x3, 0.2)
-            out = self.outlinear(x3)
-            return out,x2, gcn_g_feat1
+        x3 = torch.cat((x2, gcn_g_feat1), dim=1)
+        x3 = self.drug_prot_linear(x3)
+        x3 = F.relu(x3)
+        x3 = F.dropout(x3, 0.2)
+        out = self.outlinear(x3)
+        return out,x2, gcn_g_feat1
             #return out, x2, gcn_g_feat1
 class Graphemb_extract(nn.Module):
-    def __init__(self, drug_dim, prot_dim, output_dim, perturb=False, surface_feature=False):
+    def __init__(self, drug_dim, prot_dim, output_dim, surface_feature=False):
         super( Graphemb_extract, self).__init__()
         self.esm_linear = nn.Linear(prot_dim, 512)
         self.esm_linear_sf = nn.Linear(prot_dim, 448)
@@ -365,7 +343,6 @@ class Graphemb_extract(nn.Module):
         self.hidden2 = nn.Linear(1024, 256)
         self.drug_prot_linear = nn.Linear(512, 256)
         #self.outlinear = nn.Linear(256, output_dim)
-        self.perturb = perturb
         self.surface_feature = surface_feature
         self.prot_attention = nn.MultiheadAttention(embed_dim=256, num_heads=16, batch_first=True)
         self.drug_attention = nn.MultiheadAttention(embed_dim=256, num_heads=16, batch_first=True)
@@ -380,49 +357,31 @@ class Graphemb_extract(nn.Module):
         else:
             x1 = self.esm_linear(prot_data.x.float())
         gcn_n_feat1, gcn_g_feat1 = self.gcn(x1, prot_data)
-        if self.perturb:
-            gcn_n_feat2, gcn_g_feat2 = self.gcn(x1, prot_data, pertubed=True)
-            
-            x2 = self.drug_linear(drug)
-            x2 = F.relu(x2)
-            x2 = F.dropout(x2, 0.2)
-            x2 = self.hidden2(x2)
-            # x2 = F.relu(x2)
-            # x2 = F.dropout(x2, 0.2)
-            
-            x3 = torch.cat((x2, gcn_g_feat1), dim=1)
-            x3 = self.drug_prot_linear(x3)
-            x3 = F.relu(x3)
-            x3 = F.dropout(x3, 0.2)
-            out = self.outlinear(x3)
-            
-            return gcn_g_feat1, gcn_g_feat2
         
-        else:
-            x1=gcn_g_feat1
-            x1 = F.dropout(x1, 0.2)
-            x1 = F.relu(x1)
-            x1 = x1.unsqueeze(1)  # Add sequence dimension for attention (B, L=1, D)
-            prot_query = self.prot_query.repeat(x1.size(0), 1, 1)
-            x1, _ = self.prot_attention(prot_query, x1, x1)  # Self-attention (query, key, value)
-            x1 = x1.squeeze(1)
-            x2 = self.drug_linear(drug)
-            x2 = F.relu(x2)
-            x2 = F.dropout(x2, 0.2)
-            x2 = self.hidden2(x2)
-            x2 = x2.unsqueeze(1)  # Add sequence dimension for attention (B, L=1, D)
-            drug_query = self.drug_query.repeat(x2.size(0), 1, 1)
-            x2, _ = self.drug_attention(drug_query, x2, x2)  # Self-attention (query, key, value)
-            x2 = x2.squeeze(1)  # Remove sequence dimension (B, D)
-            embedding1 = F.normalize(x1, p=2, dim=-1)
-            embedding2 = F.normalize(x2, p=2, dim=-1)
-            # x2 = F.relu(x2)
-            # x2 = F.dropout(x2, 0.2)
+        x1=gcn_g_feat1
+        x1 = F.dropout(x1, 0.2)
+        x1 = F.relu(x1)
+        x1 = x1.unsqueeze(1)  # Add sequence dimension for attention (B, L=1, D)
+        prot_query = self.prot_query.repeat(x1.size(0), 1, 1)
+        x1, _ = self.prot_attention(prot_query, x1, x1)  # Self-attention (query, key, value)
+        x1 = x1.squeeze(1)
+        x2 = self.drug_linear(drug)
+        x2 = F.relu(x2)
+        x2 = F.dropout(x2, 0.2)
+        x2 = self.hidden2(x2)
+        x2 = x2.unsqueeze(1)  # Add sequence dimension for attention (B, L=1, D)
+        drug_query = self.drug_query.repeat(x2.size(0), 1, 1)
+        x2, _ = self.drug_attention(drug_query, x2, x2)  # Self-attention (query, key, value)
+        x2 = x2.squeeze(1)  # Remove sequence dimension (B, D)
+        embedding1 = F.normalize(x1, p=2, dim=-1)
+        embedding2 = F.normalize(x2, p=2, dim=-1)
+        # x2 = F.relu(x2)
+        # x2 = F.dropout(x2, 0.2)
             
-            # x3 = torch.cat((x2, gcn_g_feat1), dim=1)
-            # x3 = self.drug_prot_linear(x3)
-            # x3 = F.relu(x3)
-            # x3 = F.dropout(x3, 0.2)
-            # out = self.outlinear(x3)
-            return embedding1, embedding2
-            #return out, x2, gcn_g_feat1    
+        # x3 = torch.cat((x2, gcn_g_feat1), dim=1)
+        # x3 = self.drug_prot_linear(x3)
+        # x3 = F.relu(x3)
+        # x3 = F.dropout(x3, 0.2)
+        # out = self.outlinear(x3)
+        return embedding1, embedding2
+        #return out, x2, gcn_g_feat1    
