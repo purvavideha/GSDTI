@@ -1,4 +1,4 @@
-# Graph-Based Drug-Target Interaction Prediction
+# GS-DTI: A Graph-Structure-Aware Framework Leveraging Large Language Models for Drug–Target Interaction Prediction
 
   ![Model overview](https://github.com/user-attachments/assets/df2fc688-54ad-42a1-bc99-201528d6367a) <!-- Optional -->
 
