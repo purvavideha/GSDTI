@@ -1,6 +1,8 @@
 # GS-DTI: A Graph-Structure-Aware Framework Leveraging Large Language Models for Drug–Target Interaction Prediction
 
-  ![Model overview](https://github.com/user-attachments/assets/df2fc688-54ad-42a1-bc99-201528d6367a) <!-- Optional -->
+  ![Model overview] ![DTI](https://github.com/user-attachments/assets/483567f5-0302-484e-9374-a2409cccf3bf)
+<!-- Optional -->
+
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)](https://www.python.org/)
@@ -29,15 +31,20 @@ A clear description of your project and its purpose.
 ### Using Conda (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/purvavideha/GraphDTI.git
-cd GraphDTI
+git clone https://github.com/purvavideha/GSDTI.git
+cd GSDTI
 
 # Create and activate conda environment
 conda env create -f environment.yml
 conda activate env-name  # Replace with your environment name
 ```
 ## Data preparing 
-
+### drug data preprocessing
+follow the guide in KPGT(https://github.com/lihan97/KPGT) for drug feature extraction to get kpgt.npz
+### protein data preprocessing
+1.prepare your data in a format similar to data/BindingDB/targets/targets.csv
+2.change path in protfeature.py and run it to get prot_rep.pkl
+3.prepare the raw .pdb for your protein and use build_graph.py to generate graph features for your protein in .pt
 ## Usage
 
 ### 1. Train on BindingDB only  
