@@ -13,12 +13,9 @@ A clear description of your project and its purpose.
 ## Table of Contents
 - [Features](#features)
 - [Installation](#installation)
+- [Data preparing ](#datapreparing )
 - [Usage](#usage)
-- [Configuration](#configuration)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Dataset Information](#datasetinformation)
 
 ## Features
 - using KPGT(https://github.com/lihan97/KPGT) for drug feature extraction
