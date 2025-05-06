@@ -209,7 +209,7 @@ if __name__ == "__main__":
     parser.add_argument("--learning_rate", type=float, default=0.001, help="Learning rate for the optimizer")
     parser.add_argument("--batch_size", type=int, default=48, help="Batch size for DataLoader")
     parser.add_argument("--use_wandb", action="store_true", help="Enable Weights & Biases logging")
-    parser.add_argument("--wandb_key", type=str, default='9bb7197089bc58c5117824284952f17892a82f9b', help="API key for Weights & Biases")
+    parser.add_argument("--wandb_key", type=str, default='', help="API key for Weights & Biases")
     parser.add_argument("--load_sim", action="store_true", help="Use similarity-based DataLoader collate function")
     parser.add_argument("--local_rank", type=int, default=0, help="for distribute learning")
     args = parser.parse_args()
