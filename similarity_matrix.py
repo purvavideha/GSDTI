@@ -14,10 +14,10 @@ drug_df = pd.read_csv(drug_path)
 target_path = 'data/BindingDB/targets.csv'
 target_df = pd.read_csv(target_path)
 
-davis_drug_path = '/home/jyjiang/drug_interaction/data/DAVIS_processed/davis_drugs/davis_drugs.csv'
+davis_drug_path = 'data/DAVIS_processed/davis_drugs/davis_drugs.csv'
 davis_drug_df = pd.read_csv(davis_drug_path)
 
-davis_target_path = '/home/jyjiang/drug_interaction/data/DAVIS_processed/davis_targets/davis_targets_new.csv'
+davis_target_path = 'data/DAVIS_processed/davis_targets/davis_targets_new.csv'
 davis_target_df = pd.read_csv(davis_target_path)
 def compute_and_save_tanimoto_matrix(drug_df, save_path):
     """
@@ -44,7 +44,7 @@ def compute_and_save_tanimoto_matrix(drug_df, save_path):
     print(f"Tanimoto similarity matrix saved to: {save_path}")
 
 # 示例使用
-compute_and_save_tanimoto_matrix(drug_df=drug_df, save_path="/home/jyjiang/drug_interaction/data/BindingDB/drugsim_matrix.npz")
+compute_and_save_tanimoto_matrix(drug_df=drug_df, save_path="data/BindingDB/drugsim_matrix.npz")
 
 
 def compute_tm_score(pair):
@@ -135,4 +135,4 @@ def compute_and_save_tm_score_matrix(target_df, pdb_folder, save_path):
     print(f"TM-score similarity matrix saved to: {save_path}")
 
 # 示例使用
-compute_and_save_tm_score_matrix_parallel(target_df=target_df, pdb_folder="/home/jyjiang/drug_interaction/data/BindingDB/targets/esmfold", save_path='/home/jyjiang/drug_interaction/data/BindingDB/targets/target_simmatrix.npz')
+compute_and_save_tm_score_matrix_parallel(target_df=target_df, pdb_folder="data/BindingDB/targets/esmfold", save_path='data/BindingDB/targets/target_simmatrix.npz')
