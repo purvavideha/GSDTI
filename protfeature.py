@@ -11,15 +11,12 @@ import pickle
 import gzip
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# df_davis = pd.read_csv('/home/hfcloudy/Program/drug_interaction/data/DAVIS/davis_targets.csv')
+# df_davis = pd.read_csv('data/DAVIS/davis_targets.csv')
 # prot_ids = df_davis['Target_ID'].values
 # prot_seqs = df_davis['Target'].values
-#df_bindingdb = pd.read_csv('drug-target/data/BindingDB/targets/targets.csv')
-# prot_ids = df_bindingdb['Target_ID'].values
-# prot_seqs = df_bindingdb['Target'].values
-df_bind_data = pd.read_csv('/home/jyjiang/drug_interaction/data/BACE1/target.csv')
-prot_ids = df_bind_data['Target_ID'].values
-prot_seqs = df_bind_data['Target'].values
+df_bindingdb = pd.read_csv('drug-target/data/BindingDB/targets/targets.csv')
+prot_ids = df_bindingdb['Target_ID'].values
+prot_seqs = df_bindingdb['Target'].values
 
 # id = prot_ids[0]
 # data = prot_seqs[0]
@@ -34,16 +31,7 @@ batch_converter = alphabet.get_batch_converter()
 # esm_model = nn.DataParallel(esm_model, device_ids=[0])
 esm_model = esm_model.to(device)
 esm_model.eval()
-# state_dict = torch.load("/home/hfcloudy/Program/drug_interaction/pretrained_models/esmc_600m_2024_12_v0.pth")
-# model = ESMC(
-#             d_model=1152,
-#             n_heads=18,
-#             n_layers=36,
-#             tokenizer=get_esmc_model_tokenizers(),
-#             use_flash_attn=True,
-#         ).eval()                           #these are settings in the official repo
-# model.load_state_dict(state_dict)
-# model.cuda()
+
 token_representations = []
 
 
@@ -66,15 +54,8 @@ for sample in esm_format_data:
 
 # token_representations = np.array(token_representations)
 
-# with gzip.open('drug-target/data/BindingDB/targets/prot_rep_esmc.pkl.gz', 'wb') as f:
-#     pickle.dump(token_representations, f)
-with open('/home/jyjiang/drug_interaction/data/BACE1/prot_rep.pkl', 'wb') as f:
+with open('data/BindngDB/targets/prot_rep.pkl', 'wb') as f:
     pickle.dump(token_representations, f)
-    
-# np.savez_compressed('/data/yuqinze/project/drug-target/data/BindingDB/targets/prot_rep.npz', token_representations)
-# np.save('/data/yuqinze/project/drug-target/data/BindingDB/targets/prot_id.npy', prot_ids)
-
-
 
 # Generate per-sequence representations via averaging
 # NOTE: token 0 is always a beginning-of-sequence token, so the first residue is token 1.
