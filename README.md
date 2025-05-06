@@ -36,21 +36,29 @@ conda env create -f environment.yml
 conda activate env-name  # Replace with your environment name
 ```
 ## Data preparing 
+### data file format
+get your data in the format as of data/BindingDB df_less1000.csv
 ### drug data preprocessing
-follow the guide in KPGT(https://github.com/lihan97/KPGT) for drug feature extraction to get kpgt.npz
+first prepare your data in a format similar to data/BindingDB/drugs/drugs.csv
+follow the guide in KPGT(https://github.com/lihan97/KPGT) for drug feature extraction to get kpgt.npz,
+put it into data/yourdataset/drugs 
 ### protein data preprocessing
 1.prepare your data in a format similar to data/BindingDB/targets/targets.csv
-2.change path in protfeature.py and run it to get prot_rep.pkl
-3.prepare the raw .pdb for your protein and use build_graph.py to generate graph features for your protein in .pt
+
+2.change path in protfeature.py and run it to get prot_rep.pkl,put it into data/yourdataset/targets (take BindingDB as yourdataset for example )
+
+3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esm and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default
 ## Usage
 
 ### 1. Train on BindingDB only  
+after preprocessing  BindingDB data
 ```bash
 deepspeed train_graph_bindingdb.py
 ```
 *Trains a model exclusively on BindingDB data*
 
 ### 2. Train on BindingDB + Evaluate on DAVIS  
+after preprocessing both BindingDB data and DAVIS data
 ```bash
 deepspeed train_graph_davis.py
 ```
