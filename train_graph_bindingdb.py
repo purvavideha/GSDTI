@@ -14,13 +14,7 @@ from utils import *
 import deepspeed
 import wandb
 from torch.utils.data.distributed import DistributedSampler
-davis_drug_path = 'data/DAVIS_processed/davis_drugs/davis_drugs.csv'
-davis_target_path = 'data/DAVIS_processed/davis_targets/davis_targets_new.csv'
-davis_drug_feature_path = 'data/DAVIS_processed/davis_drugs/kpgt_base.npz'
 
-davis_protein_feature_path = 'data/DAVIS_processed/davis_targets/prot_repnew.pkl'
-davis_data_path = 'data/DAVIS_processed/df_new.csv'
-davis_graph_folderpath = 'data/DAVIS_processed/davis_targets/graph'
 bindingdb_drug_path = 'data/BindingDB/drugs.csv'
 bindingdb_target_path = 'data/BindingDB/targets.csv'
 bindingdb_drug_feature_path = 'data/BindingDB/kpgt_base.npz'
@@ -30,35 +24,10 @@ bindingdb_data_path = 'data/BindingDB/df_less1000.csv'
 bindingdb_graph_folderpath = 'data/BindingDB/targets/graph'
 bindingdb_tanimoto_sim_path = 'data/BindingDB/drugsim_matrix.npz'
 bindingdb_tmscore_path = 'data/BindingDB/targets/target_simmatrix.npz'
-bindingdb_tanimoto_matrix = np.load(bindingdb_tanimoto_sim_path)['arr_0']
-bindingdb_tm_score_matrix = np.load(bindingdb_tmscore_path)['arr_0']
-davis_tanimoto_sim_path = 'data/DAVIS_processed/davis_drugs/drugsim_matrix.npz'
-davis_tmscore_path = 'data/DAVIS_processed/davis_targets/target_simmatrix.npz'
-davis_tanimoto_matrix = np.load(davis_tanimoto_sim_path)['arr_0']
-davis_tm_score_matrix = np.load(davis_tmscore_path)['arr_0']
+# bindingdb_tanimoto_matrix = np.load(bindingdb_tanimoto_sim_path)['arr_0']
+# bindingdb_tm_score_matrix = np.load(bindingdb_tmscore_path)['arr_0']
 
 # load feature
-davis_drug_feature = np.load(davis_drug_feature_path)
-davis_drug_feature = davis_drug_feature['fps']
-with  open(davis_protein_feature_path, 'rb') as f:
-    davis_protein_feature = pickle.load(f)
-# average to get same length
-davis_target_feature = []
-for feature in davis_protein_feature:
-    feature = feature.squeeze(0)
-    davis_target_feature.append(feature[1 : len(feature[0]) - 1].mean(0))
-# build dict of id and feature     
-davis_drug_df = pd.read_csv(davis_drug_path)
-davis_target_df = pd.read_csv(davis_target_path)
-davis_drug_ids = davis_drug_df['Drug_ID']
-davis_target_ids = davis_target_df['Target_ID']
-davis_drug_dict = dict(zip(davis_drug_ids, davis_drug_feature))
-
-davis_data_df=pd.read_csv(davis_data_path)
-davis_data_df['Label']=davis_data_df['Label'].astype(int)
-
-
-
 
 bindingdb_drug_feature = np.load(bindingdb_drug_feature_path)
 bindingdb_drug_feature = bindingdb_drug_feature['fps']
@@ -207,7 +176,7 @@ if __name__ == "__main__":
     parser.add_argument("--learning_rate", type=float, default=0.001, help="Learning rate for the optimizer")
     parser.add_argument("--batch_size", type=int, default=48, help="Batch size for DataLoader")
     parser.add_argument("--use_wandb", action="store_true", help="Enable Weights & Biases logging")
-    parser.add_argument("--wandb_key", type=str, default='9bb7197089bc58c5117824284952f17892a82f9b', help="API key for Weights & Biases")
+    parser.add_argument("--wandb_key", type=str, default='1', help="API key for Weights & Biases")
     parser.add_argument("--load_sim", action="store_true", help="Use similarity-based DataLoader collate function")
     parser.add_argument("--local_rank", type=int, default=0, help="for distribute learning")
     args = parser.parse_args()
@@ -233,11 +202,6 @@ if __name__ == "__main__":
     sim_loss_fn = SimilarityLoss()
 
     model = GraphDTI(bindingdb_drug_feature[0].shape[0], bindingdb_target_feature[0].shape[0], 2).to(torch.device(f'cuda:{args.local_rank}'))
-    # state_dict_path = "/home/jyjiang/drug_interaction/best_model79.pth"
-    # state_dict = torch.load(state_dict_path)
-
-   # Step 3: Load the state_dict into the model
-    # model.load_state_dict(state_dict)
 
     # Train the model
     train_drug_graph(train_dataset, test_dataset, valid_dataset, model, criterion2, sim_loss_fn, args)
