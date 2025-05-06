@@ -47,7 +47,7 @@ put it into data/yourdataset/drugs
 
 2.change path in protfeature.py and run it to get prot_rep.pkl,put it into data/yourdataset/targets (take BindingDB as yourdataset for example )
 
-3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esm and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default
+3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esmfold and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default
 ## Usage
 
 ### 1. Train on BindingDB only  
