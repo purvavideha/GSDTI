@@ -14,9 +14,9 @@ import gzip
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-target_path = 'data/BACE1/target.csv'
-esmfold_path = 'data/BACE1/esmfold'
-protein_feature_path = 'data/BACE1/prot_rep.pkl'
+target_path = 'data/BindingDB/targets/target.csv'
+esmfold_path = 'data/BindingDB/targets/esmfold'
+protein_feature_path = 'data/BindingDB/targets/prot_rep.pkl'
 
 with open(protein_feature_path, 'rb') as f:
     protein_feature = pkl.load(f)
