@@ -38,12 +38,36 @@ conda activate env-name  # Replace with your environment name
 ## Data preparing 
 ### data file format
 get your data in the format as of data/BindingDB df_less1000.csv
+and run the following code to get distinct drugs and targets for later preprocessing
+```bash
+import pandas as pd
+df = pd.read_csv("yourfile.csv")
+drugs_df = df[['Drug_ID', 'Drug']].drop_duplicates().rename(columns={'Drug': 'smiles'}).reset_index(drop=True)
+drugs_df.to_csv("drugs.csv", index=False)
+targets_df = df[['Target_ID', 'Target']].drop_duplicates().reset_index(drop=True)
+targets_df.to_csv("targets.csv", index=False)
+ ```
+
 ### drug data preprocessing
-first prepare your data in a format similar to data/BindingDB/drugs/drugs.csv
-follow the guide in KPGT(https://github.com/lihan97/KPGT) for drug feature extraction to get kpgt.npz,
-put it into data/yourdataset/drugs 
+first prepare your drugs.csv as mentioned 
+follow the guide in KPGT(https://github.com/lihan97/KPGT) for drug feature extraction,
+create its own env for this step only
+- ```bash
+  git clone https://github.com/lihan97/KPGT.git
+  cd KPGT
+  conda env create
+  conda activate KPGT
+  ```
+- Then Download the pre-trained model at: https://figshare.com/s/d488f30c23946cf6898f.
+  unzip it and put it in the KPGT/models/ directory.
+  bring your drugs.csv to KPGT/datasets,rename it to your_dataset.csv
+  ```bash
+  python preprocess_downstream_dataset.py --data_path ../datasets/ --dataset your_dataset
+  python extract_features.py --config base --model_path ../models/pretrained/base/base.pth --data_path ../datasets/ --dataset your_dataset
+  ```
+finally,put /home/hfcloudy/KPGT/datasets/bind_drugs/kpgt_base.npz into data/yourdataset/drugs 
 ### protein data preprocessing
-1.prepare your data in a format similar to data/BindingDB/targets/targets.csv
+1.prepare your targets.csv
 
 2.change path in protfeature.py and run it to get prot_rep.pkl,put it into data/yourdataset/targets (take BindingDB as yourdataset for example )
 
