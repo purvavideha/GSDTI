@@ -100,6 +100,8 @@ for _, row in tqdm(targets_df.iterrows(), total=len(targets_df)):
     except Exception as e:
         print(f"[ERROR] {target_id}: {e}")
 ```
+### processed data for quick start
+you can directly use processed data at https://drive.google.com/file/d/1vLY3FkcrnaSZpOL8u5UUbA6EWoecaWhx/view?usp=drive_link for test on BindingDB
 ## Usage
 
 ### 1. Train on BindingDB only  
