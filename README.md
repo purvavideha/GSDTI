@@ -119,6 +119,9 @@ deepspeed train_graph_davis.py
 *Trains on BindingDB then cross-validates performance on DAVIS dataset*
 ### 3. Train with similarity matrix 
 simimlarity matrix computed based structure shows the similarity between different drugs or proteins, aligning this similarity within  drugs or proteins features generated will minorly benefit or harm training performance,you can use similarity_matrix.py to generate such similarity matrix of either protein or drugs and pass load_sim to traininng_args to test performance change. 
+```bash
+deepspeed train_graph_bindingdb.py --load_sim
+```
 
 ## Dataset-Information
 - **BindingDB**: Large-scale drug-target interaction database
