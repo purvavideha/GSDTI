@@ -1,14 +1,12 @@
 # GS-DTI: A Graph-Structure-Aware Framework Leveraging Large Language Models for Drug–Target Interaction Prediction
 
-  ![Model overview] ![DTI](https://github.com/user-attachments/assets/483567f5-0302-484e-9374-a2409cccf3bf)
+![DTI](https://github.com/user-attachments/assets/483567f5-0302-484e-9374-a2409cccf3bf)
 <!-- Optional -->
-
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)](https://www.python.org/)
 [![Open Issues](https://img.shields.io/github/issues/your-username/repo-name)](https://github.com/your-username/repo-name/issues)
 
-A clear description of your project and its purpose.
 
 ## Table of Contents
 - [Features](#features)
@@ -70,7 +68,10 @@ finally,put /home/hfcloudy/KPGT/datasets/bind_drugs/kpgt_base.npz into data/your
 1.prepare your targets.csv
 
 2.change path in protfeature.py and run it to get prot_rep.pkl,put it into data/yourdataset/targets (take BindingDB as yourdataset for example )
-
+```bash
+python protfeature.py
+mv prot_rep.pkl  data/yourdataset/targets
+```
 3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esmfold and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default
 ## Usage
 
