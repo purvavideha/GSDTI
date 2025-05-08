@@ -1,7 +1,8 @@
 # GS-DTI: A Graph-Structure-Aware Framework Leveraging Large Language Models for Drug–Target Interaction Prediction
 
-![DTI](https://github.com/user-attachments/assets/483567f5-0302-484e-9374-a2409cccf3bf)
+![DTI](https://github.com/user-attachments/assets/502f4188-d9d6-4d58-aeab-65c493392bd8)
 <!-- Optional -->
+
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)](https://www.python.org/)
