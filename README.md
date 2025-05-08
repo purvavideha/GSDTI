@@ -12,9 +12,9 @@
 ## Table of Contents
 - [Features](#features)
 - [Installation](#installation)
-- [Data preparing ](#datapreparing )
+- [Data-preparing ](#data-preparing )
 - [Usage](#usage)
-- [Dataset Information](#datasetinformation)
+- [Dataset-Information](#dataset-information)
 
 ## Features
 - using KPGT(https://github.com/lihan97/KPGT) for drug feature extraction
@@ -22,7 +22,6 @@
 - using MLP for interaction prediction
 
 ## Installation
-
 
 ### Using Conda (Recommended)
 ```bash
@@ -34,7 +33,8 @@ cd GSDTI
 conda env create -f environment.yml
 conda activate env-name  # Replace with your environment name
 ```
-## Data preparing 
+
+## Data-preparing 
 ### data file format
 get your data in the format as of data/BindingDB df_less1000.csv
 and run the following code to get distinct drugs and targets for later preprocessing
@@ -73,7 +73,35 @@ finally,put /home/hfcloudy/KPGT/datasets/bind_drugs/kpgt_base.npz into data/your
 python protfeature.py
 mv prot_rep.pkl  data/yourdataset/targets
 ```
-3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esmfold and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default
+3.prepare the raw .pdb or use esmfold to generate .pdb for your protein,put them to data/yourdataset/targets/esmfold and use build_graph.py to generate graph features for your protein in .pt which are saved to data/yourdataset/targets/graph by default.
+
+Here is a guide to use esmfold to generate .pdb for your protein
+```bash
+import torch
+import esm
+model = esm.pretrained.esmfold_v1()
+model = model.eval().cuda()
+targets_df = pd.read_csv("targets.csv")
+
+# Output directory
+output_dir = "pdbs"
+os.makedirs(output_dir, exist_ok=True)
+def generate_pdb(sequence, target_id):
+    with torch.no_grad():
+        output = model.infer_pdb(sequence)
+    pdb_path = os.path.join(output_dir, f"{target_id}.pdb")
+    with open(pdb_path, "w") as f:
+        f.write(output)
+    return pdb_path
+# Iterate and predict
+for _, row in tqdm(targets_df.iterrows(), total=len(targets_df)):
+    target_id = row["Target_ID"]
+    sequence = row["Target"]
+    try:
+        generate_pdb(sequence, target_id)
+    except Exception as e:
+        print(f"[ERROR] {target_id}: {e}")
+```
 ## Usage
 
 ### 1. Train on BindingDB only  
@@ -91,7 +119,8 @@ deepspeed train_graph_davis.py
 *Trains on BindingDB then cross-validates performance on DAVIS dataset*
 ### 3. Train with similarity matrix 
 simimlarity matrix computed based structure shows the similarity between different drugs or proteins, aligning this similarity within  drugs or proteins features generated will minorly benefit or harm training performance,you can use similarity_matrix.py to generate such similarity matrix of either protein or drugs and pass load_sim to traininng_args to test performance change. 
-## Dataset Information
+
+## Dataset-Information
 - **BindingDB**: Large-scale drug-target interaction database
 - **DAVIS**: Benchmark dataset for binding affinity prediction
 
