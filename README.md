@@ -63,7 +63,7 @@ create its own env for this step only
   python preprocess_downstream_dataset.py --data_path ../datasets/ --dataset your_dataset
   python extract_features.py --config base --model_path ../models/pretrained/base/base.pth --data_path ../datasets/ --dataset your_dataset
   ```
-finally,put /home/hfcloudy/KPGT/datasets/bind_drugs/kpgt_base.npz into data/yourdataset/drugs 
+finally,put KPGT/datasets/bind_drugs/kpgt_base.npz into data/yourdataset/drugs 
 ### protein data preprocessing
 1.prepare your targets.csv
 
