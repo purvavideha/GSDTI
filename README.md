@@ -101,6 +101,10 @@ for _, row in tqdm(targets_df.iterrows(), total=len(targets_df)):
     except Exception as e:
         print(f"[ERROR] {target_id}: {e}")
 ```
+### simmatrix generating for contrastive learning
+```bash
+python sim_matrix.py
+```
 ### processed data for quick start
 you can directly use processed data at https://drive.google.com/file/d/1vLY3FkcrnaSZpOL8u5UUbA6EWoecaWhx/view?usp=drive_link for train and test on BindingDB
 ## Usage
