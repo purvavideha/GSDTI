@@ -102,30 +102,26 @@ for _, row in tqdm(targets_df.iterrows(), total=len(targets_df)):
         print(f"[ERROR] {target_id}: {e}")
 ```
 ### processed data for quick start
-you can directly use processed data at https://drive.google.com/file/d/1vLY3FkcrnaSZpOL8u5UUbA6EWoecaWhx/view?usp=drive_link for test on BindingDB
+you can directly use processed data at https://drive.google.com/file/d/1vLY3FkcrnaSZpOL8u5UUbA6EWoecaWhx/view?usp=drive_link for train and test on BindingDB
 ## Usage
 
-### 1. Train on BindingDB only  
+### 1. Train on BindingDB and evaluate on Davis
 after preprocessing  BindingDB data
 ```bash
-deepspeed train_graph_bindingdb.py
-```
-*Trains a model exclusively on BindingDB data*
-
-### 2. Train on BindingDB + Evaluate on DAVIS  
-after preprocessing both BindingDB data and DAVIS data
-```bash
-deepspeed train_graph_davis.py
+python train_davis_intracl.py
 ```
 *Trains on BindingDB then cross-validates performance on DAVIS dataset*
-### 3. Train with similarity matrix 
-simimlarity matrix computed based structure shows the similarity between different drugs or proteins, aligning this similarity within  drugs or proteins features generated will minorly benefit or harm training performance,you can use similarity_matrix.py to generate such similarity matrix of either protein or drugs and pass load_sim to traininng_args to test performance change. 
+
+### 2. Train on other train/val/test sets 
+after preprocessing your data to our format,change related dataset path in training script,and run
 ```bash
-deepspeed train_graph_bindingdb.py --load_sim
+python train_yourdataset_intracl.py
 ```
+*Trains ,validate and test on your dataset*
 
 ## Dataset-Information
 - **BindingDB**: Large-scale drug-target interaction database
 - **DAVIS**: Benchmark dataset for binding affinity prediction
+- **BIOSNAP**: Stanford‑maintained library of biomedical network datasets
 
 
