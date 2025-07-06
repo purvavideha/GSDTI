@@ -109,12 +109,12 @@ python sim_matrix.py
 you can directly use processed data at https://drive.google.com/file/d/1vLY3FkcrnaSZpOL8u5UUbA6EWoecaWhx/view?usp=drive_link for train and test on BindingDB
 ## Usage
 
-### 1. Train on BindingDB and evaluate on Davis
+### 1. Train on BindingDB and evaluate 
 after preprocessing  BindingDB data
 ```bash
-python train_davis_intracl.py
+python train_bd_intracl.py
 ```
-*Trains on BindingDB then cross-validates performance on DAVIS dataset*
+*Trains on BindingDB then validates *
 
 ### 2. Train on other train/val/test sets 
 after preprocessing your data to our format,change related dataset path in training script,and run
