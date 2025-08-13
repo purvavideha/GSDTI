@@ -128,4 +128,19 @@ python train_yourdataset_intracl.py
 - **DAVIS**: Benchmark dataset for binding affinity prediction
 - **BIOSNAP**: Stanford‑maintained library of biomedical network datasets
 
-
+## Citation
+```
+@article{yu2025graph,
+    author = {Yu, Qinze and Zhou, Chang and Jiang, Jiyue and Shi, Xiangyu and Li, Yu},
+    title = {GS-DTI: A Graph-Structure-Aware Framework Leveraging Large Language Models for Drug–Target Interaction Prediction},
+    journal = {Bioinformatics},
+    pages = {btaf445},
+    year = {2025},
+    month = {08},
+    abstract = {Accurate and generalizable prediction of drug–target interactions (DTIs) remains a critical challenge for drug discovery, particularly when addressing underexplored targets and compounds. Recent advances in graph neural networks and large-scale pre-trained models offer new opportunities to capture rich structural and functional features essential for DTI prediction while enhancing the generalization ability.We present GS-DTI, a graph structure-based DTI prediction framework that integrates molecular graph transformers, protein language models, and protein tertiary structure. Our method achieved robust and interpretable DTI predictions. GS-DTI extracts drug features from SMILES-derived molecular graphs using a knowledge-guided pre-trained transformer, while protein features are derived from both sequence and predicted 3D structure for comprehensive representation. A multi-task loss function equipped with contrastive learning is adopted to enhance generalization and functional interpretability. Extensive experiments on the benchmarks and challenging cross-domain settings demonstrate that GS-DTI achieves state-of-the-art performance. Notably, our model improves the MCC by over 10\% compared to previous methods in the drug-target pair cold start test. The model can pinpoint the binding pockets of the targets, offering robust interpretability, and case studies show GS-DTI’s promising potential in virtual screening for new candidate drugs of BACE1.The GS-DTI source code and processed datasets are available at https://github.com/purvavideha/GSDTI. All experimental data are derived from public sources.Supplementary data are available at Bioinformatics online.},
+    issn = {1367-4811},
+    doi = {10.1093/bioinformatics/btaf445},
+    url = {https://doi.org/10.1093/bioinformatics/btaf445},
+    eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btaf445/63996212/btaf445.pdf},
+}
+```
